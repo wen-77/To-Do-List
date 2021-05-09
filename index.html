@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue - To Do List</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <style>
+        form div {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="col-6 mx-auto mt-5">
+        <h2 class="alert alert-success">{{title}}</h2>
+        <!-- 將newItem透過pushNewItem放入toDoList-->
+        <div class="input-group mb-3 align-center">
+            <label class="mt-1">新增待辦事項：</label>
+            <input type="text" class="form-control border border-secondary rounded-left"
+                placeholder="Enter Something..." aria-describedby="button-addon2" v-model="newItem">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon2" @click="pushNewItem"><i
+                        class="fas fa-plus"></i></button>
+            </div>
+        </div>
+        <!-- 確定input有連動 -->
+        <i>確認內容：{{newItem}}</i>
+        <hr>
+        <form>
+            <div>
+                <!-- 將輸入的item放進toDoList(v-for)，
+                     將勾選的item放入DoneList(v-model)
+                     將item格式化修飾(listFormat)-->
+                <label v-for="item in toDoList">
+                    <input type="checkbox" :value="item" v-model="DoneList">
+                    {{item | listFormat}}
+                </label>
+            </div>
+            <!-- 如沒完成項目，就不會出現 -->
+            <div v-if="DoneList!=''">
+                <p>已完成項目： {{doneString}}</p>
+            </div>
+        </form>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                title: "To Do Lists",
+                toDoList: [],
+                newItem: "",
+                DoneList: [],
+            },
+            methods: {
+                pushNewItem: function () {
+                        // 將newItem塞回toDoList
+                        this.toDoList.push(this.newItem)
+                        this.newItem = ''
+                },
+            },
+            computed: {
+                doneString: function () {
+                    return this.DoneList.join(' , ')
+                }
+            },
+            filters: {
+                listFormat: (str) => {
+                    return `| ${str} |`
+                }
+            },
+            watch: {
+                toDoList: function () {
+                    alert('已新增新項目!')
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
